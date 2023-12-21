@@ -12,6 +12,21 @@
   <% end %>
 
   <div>
+    <%= form.label :title, style: "display: block" %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div>
+    <%= form.label :body, style: "display: block" %>
+    <%= form.text_area :body %>
+  </div>
+
+  <div>
+    <%= form.label :published, style: "display: block" %>
+    <%= form.check_box :published %>
+  </div>
+
+  <div>
     <%= form.submit %>
   </div>
 <% end %>
