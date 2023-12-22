@@ -13,7 +13,7 @@ class PostsController < ApplicationController
   def download_pdf
     html = render_to_string(template: 'posts/_post', layout: 'pdf', locals: { post: @post })
     pdf = html2pdf(html)
-    send_data pdf, filename: 'post.pdf', type: 'application/pdf'
+    send_data pdf, filename: "post_#{@post.id}.pdf", type: 'application/pdf'
   end
 
   # GET /posts/new
