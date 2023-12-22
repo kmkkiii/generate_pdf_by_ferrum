@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: %i[ show edit update destroy ]
+  before_action :set_post, only: %i[ show edit update destroy download_pdf ]
 
   # GET /posts or /posts.json
   def index
@@ -8,6 +8,12 @@ class PostsController < ApplicationController
 
   # GET /posts/1 or /posts/1.json
   def show
+  end
+
+  def download_pdf
+    html = render_to_string(template: 'posts/_post', layout: 'pdf', locals: { post: @post })
+    pdf = html2pdf(html)
+    send_data pdf, filename: 'post.pdf', type: 'application/pdf'
   end
 
   # GET /posts/new
@@ -66,5 +72,21 @@ class PostsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def post_params
       params.require(:post).permit(:title, :body, :published)
+    end
+
+    def html2pdf(html)
+      browser = Ferrum::Browser.new(browser_path: '/usr/bin/chromium', browser_options: { 'no-sandbox': nil })
+      header_html = render_to_string('pdf/header', layout: false)
+      footer_html = render_to_string('pdf/footer', layout: false)
+      browser.goto("data:text/html,#{html}")
+      pdf = browser.pdf(
+        format: :A4,
+        encoding: :binary,
+        display_header_footer: true,
+        header_template: header_html,
+        footer_template: footer_html,
+      )
+      browser.quit
+      pdf
     end
 end
