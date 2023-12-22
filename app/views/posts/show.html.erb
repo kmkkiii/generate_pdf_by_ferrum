@@ -7,4 +7,5 @@
   <%= link_to "Back to posts", posts_path %>
 
   <%= button_to "Destroy this post", @post, method: :delete %>
+  <%= link_to 'Download PDF', download_pdf_post_path(@post) %>
 </div>
